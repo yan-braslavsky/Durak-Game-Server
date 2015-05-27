@@ -15,8 +15,8 @@ public class Main {
     //test change
     public static void main(String[] args) throws Exception {
         String port = System.getenv("PORT");
-        if(port == null)
-            port = DEBUG_PORT;
+//        if(port == null)
+//            port = DEBUG_PORT;
 
         Server server = new Server(Integer.valueOf(port));
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
