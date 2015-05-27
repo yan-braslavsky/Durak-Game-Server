@@ -1,1 +1,1 @@
-web: ./build/install/app/bin/app
+web: target/universal/stage/bin/helloworld -Dhttp.port=$PORT $PLAY_OPTS
