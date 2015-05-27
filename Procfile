@@ -1,1 +1,1 @@
-web: target/universal/stage/bin/helloworld -Dhttp.port=$PORT $PLAY_OPTS
+web: java $JAVA_OPTS -cp target/classes:target/dependency/* Main
