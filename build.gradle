@@ -30,13 +30,13 @@ repositories {
 task stage(dependsOn: ['clean', 'installApp'])
 
 //Task to open running server in browser
-task openProjectBrowser << {
-    java.awt.Desktop.desktop.browse "http://localhost:1314/".toURI()
-}
+//task openProjectBrowser << {
+//    java.awt.Desktop.desktop.browse "http://localhost:1314/".toURI()
+//}
 
-task runInBrowser(dependsOn: ['run']){
-    openProjectBrowser.execute()
-}
+//task runInBrowser(dependsOn: ['run']){
+//    openProjectBrowser.execute()
+//}
 
 //task that opens test report html in browser
 task openTestReportBrowser << {
