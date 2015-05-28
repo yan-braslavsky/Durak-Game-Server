@@ -10,11 +10,16 @@ mainClassName = "com.yan.durak.server.lobby.Main"
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://dl.dropboxusercontent.com/u/48976508/maven-repo"
+    }
 }
 
 dependencies {
     compile 'org.eclipse.jetty:jetty-servlet:7.5.3.v20111011'
     compile 'javax.servlet:servlet-api:2.5'
+    compile group: 'com.yan.durak', name: 'gamelogic-lib', version: '1.1-SNAPSHOT'
+    compile 'com.google.code.gson:gson:2.2.+'
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
@@ -23,3 +28,17 @@ repositories {
 }
 
 task stage(dependsOn: ['clean', 'installApp'])
+
+//Task to open running server in browser
+task openProjectBrowser << {
+    java.awt.Desktop.desktop.browse "http://localhost:1314/".toURI()
+}
+
+task runInBrowser(dependsOn: ['run']){
+    openProjectBrowser.execute()
+}
+
+//task that opens test report html in browser
+task openTestReportBrowser << {
+    java.awt.Desktop.desktop.browse "E:/GitHubCheckouts/DurakGameServer/build/reports/tests/index.html".toURI()
+}
