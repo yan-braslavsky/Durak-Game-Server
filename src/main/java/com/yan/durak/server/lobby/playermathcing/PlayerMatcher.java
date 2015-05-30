@@ -43,7 +43,7 @@ public class PlayerMatcher implements IPlayerMatcher, GameThread.GameThreadListe
         if (mCreatedGames.containsKey(gameType)) {
             gt = mCreatedGames.get(gameType);
         } else {
-            gt = new GameThread(mTableSocketAddress, ++PORT_NUMBER,gameType,this);
+            gt = new GameThread(mTableSocketAddress, /*++PORT_NUMBER*/8080,gameType,this);
             gt.start();
             mCreatedGames.put(gameType, gt);
         }

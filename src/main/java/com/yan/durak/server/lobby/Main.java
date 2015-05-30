@@ -10,7 +10,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
  */
 public class Main {
 
-    public static final String DEBUG_PORT = "1314";
+    public static final String DEBUG_PORT = "80";
 
     //test change
     public static void main(String[] args) throws Exception {

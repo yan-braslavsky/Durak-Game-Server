@@ -26,7 +26,6 @@
     <orderEntry type="library" exported="" name="Gradle: org.eclipse.jetty:jetty-util:7.5.3.v20111011" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.yan.durak:gamelogic-lib:1.1-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.code.gson:gson:2.2.4" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.java-websocket:Java-WebSocket:1.3.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.java-websocket:Java-WebSocket:1.3.0" level="project" />
   </component>
 </module>
