@@ -1,6 +1,6 @@
 package com.yan.durak.server.ws;
 
-import com.yan.durak.gamelogic.communication.connection.ISocketClient;
+import com.yan.durak.gamelogic.communication.connection.IRemoteClient;
 import org.java_websocket.WebSocket;
 
 import java.util.Deque;
@@ -9,7 +9,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 /**
  * Created by Yan-Home on 5/30/2015.
  */
-public class RemoteWSClient implements ISocketClient {
+public class RemoteWSClient implements IRemoteClient {
 
     private final WebSocket mWs;
     private final Deque<String> mMessageQueue;

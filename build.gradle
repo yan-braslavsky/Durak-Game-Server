@@ -7,6 +7,10 @@ apply plugin:'application'
 sourceCompatibility = 1.7
 mainClassName = "com.yan.durak.server.lobby.Main"
 
+configurations.all {
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
 
 repositories {
     mavenCentral()

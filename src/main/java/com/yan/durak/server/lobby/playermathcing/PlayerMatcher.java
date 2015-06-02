@@ -34,7 +34,7 @@ public class PlayerMatcher implements IPlayerMatcher, GameThread.GameThreadListe
     public synchronized String matchPlayer(String payload) {
         Payload payloadData = mGson.fromJson(payload, Payload.class);
 
-        if(!payloadData.isValidPayload()){
+        if (!payloadData.isValidPayload()) {
             return "payload contains invalid data";
         }
 
@@ -43,7 +43,7 @@ public class PlayerMatcher implements IPlayerMatcher, GameThread.GameThreadListe
         if (mCreatedGames.containsKey(gameType)) {
             gt = mCreatedGames.get(gameType);
         } else {
-            gt = new GameThread(mTableSocketAddress, /*++PORT_NUMBER*/8080,gameType,this);
+            gt = new GameThread(mTableSocketAddress, ++PORT_NUMBER, gameType, this);
             gt.start();
             mCreatedGames.put(gameType, gt);
         }

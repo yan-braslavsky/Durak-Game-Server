@@ -1,6 +1,6 @@
 package com.yan.durak.server.ws;
 
-import com.yan.durak.gamelogic.communication.connection.ISocketClient;
+import com.yan.durak.gamelogic.communication.connection.IRemoteClient;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -17,8 +17,8 @@ public class WSServer extends WebSocketServer {
     private final ConnectionListener mConnectionListener;
 
     public interface ConnectionListener {
-        void onRemoteClientConnected(final ISocketClient client);
-        void onRemoteClientDisconnected(final ISocketClient client);
+        void onRemoteClientConnected(final IRemoteClient client);
+        void onRemoteClientDisconnected(final IRemoteClient client);
     }
 
     /**
