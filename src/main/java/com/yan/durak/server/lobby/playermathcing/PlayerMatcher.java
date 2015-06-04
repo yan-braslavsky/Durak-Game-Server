@@ -1,6 +1,8 @@
 package com.yan.durak.server.lobby.playermathcing;
 
 import com.google.gson.Gson;
+import com.yan.durak.server.ws.IWsConnectionListener;
+import com.yan.durak.server.ws.RemoteWsClient;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -12,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PlayerMatcher implements IPlayerMatcher, GameThread.GameThreadListener {
 
-    private volatile static int PORT_NUMBER = 5010;
     private ConcurrentHashMap<GameData.GameType, GameData> mGamesMap;
     private String mTableSocketAddress;
     private Gson mGson;
@@ -42,13 +43,15 @@ public class PlayerMatcher implements IPlayerMatcher, GameThread.GameThreadListe
         GameThread gt;
         if (mCreatedGames.containsKey(gameType)) {
             gt = mCreatedGames.get(gameType);
+            RemoteWsClient.CURRENT_CONNECTION_LISTENER = gt;
         } else {
-            gt = new GameThread(mTableSocketAddress, ++PORT_NUMBER, gameType, this);
+            gt = new GameThread(mTableSocketAddress, gameType, this);
             gt.start();
             mCreatedGames.put(gameType, gt);
         }
 
-        return mTableSocketAddress + ":" + gt.getPortNumber();
+        //return relative path to socket listener
+        return "/socket";
     }
 
     @Override

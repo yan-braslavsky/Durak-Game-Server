@@ -4,7 +4,7 @@ import com.yan.durak.gamelogic.GameStarter;
 import com.yan.durak.gamelogic.communication.connection.IRemoteClient;
 import com.yan.durak.gamelogic.utils.LogUtils;
 import com.yan.durak.server.sockets.RemoteSocketClient;
-import com.yan.durak.server.ws.WSServer;
+import com.yan.durak.server.ws.IWsConnectionListener;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Awaits for all remote players to join via socket connection
  * on provided port
  */
-public class GameThread extends Thread {
+public class GameThread extends Thread implements IWsConnectionListener{
 
     interface GameThreadListener {
         void onGameStart(GameThread gameThread);
@@ -26,13 +26,11 @@ public class GameThread extends Thread {
 
     private final GameData.GameType mGameType;
     private volatile int mNumOfConnectedPlayers;
-    private int mPortNumber;
     private String mTableSocketAddress;
     private ConcurrentHashMap<Integer, IRemoteClient> mConnectedClients;
     private GameThreadListener mGameThreadListener;
 
-    public GameThread(String tableSocketAddress, int portNumber, GameData.GameType gameType, GameThreadListener listener) {
-        mPortNumber = portNumber;
+    public GameThread(String tableSocketAddress, GameData.GameType gameType, GameThreadListener listener) {
         mTableSocketAddress = tableSocketAddress;
         mConnectedClients = new ConcurrentHashMap<>(3);
         mGameType = gameType;
@@ -54,21 +52,8 @@ public class GameThread extends Thread {
     }
 
     private void connectClientsViaWebSocket() throws IOException {
-        WSServer server = new WSServer(mTableSocketAddress, mPortNumber, new WSServer.ConnectionListener() {
-            @Override
-            public void onRemoteClientConnected(IRemoteClient client) {
-                mConnectedClients.put(mNumOfConnectedPlayers, client);
-                LogUtils.log(getName() + " Remote player " + mNumOfConnectedPlayers + " connected !");
-                mNumOfConnectedPlayers++;
-            }
 
-            @Override
-            public void onRemoteClientDisconnected(IRemoteClient client) {
-                //TODO : handle somehow ?
-            }
-        });
-
-        server.start();
+        //TODO : Connect players using websocket
         waitForPlayersToConnect();
 
         //notify listener of game start
@@ -92,6 +77,12 @@ public class GameThread extends Thread {
         }
     }
 
+    @Override
+    public void onRemoteWsClientConnected(IRemoteClient remoteClient) {
+        mConnectedClients.put(mNumOfConnectedPlayers, remoteClient);
+        mNumOfConnectedPlayers++;
+    }
+
 
     private void startGameWithConnectedClients() {
         LogUtils.log(getName() + " Starting a game ");
@@ -99,44 +90,41 @@ public class GameThread extends Thread {
     }
 
 
-    private void connectClientsViaPlainSocket() throws IOException {
+//    private void connectClientsViaPlainSocket() throws IOException {
+//
+//        System.out.println(getName() + " Waiting for " + mGameType.getNumberOfHumanPlayers() + " remote players to connect");
+//        while (mNumOfConnectedPlayers != mGameType.getNumberOfHumanPlayers()) {
+//            mConnectedClients.put(mNumOfConnectedPlayers, waitForClientToConnect());
+//            LogUtils.log(getName() + " Remote player " + mNumOfConnectedPlayers + " connected !");
+//            mNumOfConnectedPlayers++;
+//        }
+//
+//        //notify listener of game start
+//        if (mGameThreadListener != null)
+//            mGameThreadListener.onGameStart(this);
+//        try {
+//            startGameWithConnectedClients();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-        System.out.println(getName() + " Waiting for " + mGameType.getNumberOfHumanPlayers() + " remote players to connect");
-        while (mNumOfConnectedPlayers != mGameType.getNumberOfHumanPlayers()) {
-            mConnectedClients.put(mNumOfConnectedPlayers, waitForClientToConnect());
-            LogUtils.log(getName() + " Remote player " + mNumOfConnectedPlayers + " connected !");
-            mNumOfConnectedPlayers++;
-        }
-
-        //notify listener of game start
-        if (mGameThreadListener != null)
-            mGameThreadListener.onGameStart(this);
-        try {
-            startGameWithConnectedClients();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private IRemoteClient waitForClientToConnect() throws IOException {
-        IRemoteClient remoteClient = null;
-        ServerSocket listener = new ServerSocket(mPortNumber);
-        try {
-            //listen to communication.connection (Blocking)
-            Socket socket = listener.accept();
-            //communication.connection received , create a remote client
-            remoteClient = new RemoteSocketClient(socket);
-        } finally {
-            listener.close();
-        }
-        return remoteClient;
-    }
+//    private IRemoteClient waitForClientToConnect() throws IOException {
+//        IRemoteClient remoteClient = null;
+//        ServerSocket listener = new ServerSocket(mPortNumber);
+//        try {
+//            //listen to communication.connection (Blocking)
+//            Socket socket = listener.accept();
+//            //communication.connection received , create a remote client
+//            remoteClient = new RemoteSocketClient(socket);
+//        } finally {
+//            listener.close();
+//        }
+//        return remoteClient;
+//    }
 
     public GameData.GameType getGameType() {
         return mGameType;
     }
 
-    public int getPortNumber() {
-        return mPortNumber;
-    }
 }

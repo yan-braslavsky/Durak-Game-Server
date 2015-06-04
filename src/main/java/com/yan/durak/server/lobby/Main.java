@@ -1,5 +1,6 @@
 package com.yan.durak.server.lobby;
 
+import com.yan.durak.server.lobby.servlets.WsServlet;
 import com.yan.durak.server.lobby.servlets.LobbyServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -23,6 +24,11 @@ public class Main {
         context.setContextPath("/");
         server.setHandler(context);
         context.addServlet(new ServletHolder(new LobbyServlet()), "/*");
+
+        // Add a websocket to a specific path spec
+        ServletHolder holder = new ServletHolder("ws-endpoint", WsServlet.class);
+        context.addServlet(holder, "/socket/*");
+
         server.start();
         server.join();
     }
