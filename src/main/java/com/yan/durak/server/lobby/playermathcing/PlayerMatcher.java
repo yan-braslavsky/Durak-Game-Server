@@ -1,7 +1,6 @@
 package com.yan.durak.server.lobby.playermathcing;
 
 import com.google.gson.Gson;
-import com.yan.durak.server.ws.IWsConnectionListener;
 import com.yan.durak.server.ws.RemoteWsClient;
 
 import java.net.InetAddress;
@@ -43,9 +42,10 @@ public class PlayerMatcher implements IPlayerMatcher, GameThread.GameThreadListe
         GameThread gt;
         if (mCreatedGames.containsKey(gameType)) {
             gt = mCreatedGames.get(gameType);
-            RemoteWsClient.CURRENT_CONNECTION_LISTENER = gt;
+
         } else {
             gt = new GameThread(mTableSocketAddress, gameType, this);
+            RemoteWsClient.CURRENT_CONNECTION_LISTENER = gt;
             gt.start();
             mCreatedGames.put(gameType, gt);
         }
