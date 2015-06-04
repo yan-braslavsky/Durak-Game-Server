@@ -66,7 +66,7 @@ public class RemoteWsClient extends WebSocketAdapter implements IRemoteClient {
                 e.printStackTrace();
             }
         }
-        return mMessageQueue.poll();
+        return mMessageQueue.poll();//T
     }
 
     @Override
