@@ -2,13 +2,11 @@ package com.yan.durak.server.lobby.playermathcing;
 
 import com.yan.durak.gamelogic.GameStarter;
 import com.yan.durak.gamelogic.communication.connection.IRemoteClient;
+import com.yan.durak.gamelogic.game.IGameRules;
 import com.yan.durak.gamelogic.utils.LogUtils;
-import com.yan.durak.server.sockets.RemoteSocketClient;
 import com.yan.durak.server.ws.IWsConnectionListener;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -86,7 +84,14 @@ public class GameThread extends Thread implements IWsConnectionListener{
 
     private void startGameWithConnectedClients() {
         LogUtils.log(getName() + " Starting a game ");
-        (new GameStarter(mConnectedClients.get(0), mConnectedClients.get(1), mConnectedClients.get(3))).start();
+        final IRemoteClient[] clients = new IRemoteClient[]{
+                mConnectedClients.get(0), mConnectedClients.get(1), mConnectedClients.get(3)};
+        (new GameStarter(new IGameRules() {
+            @Override
+            public int getTotalPlayersInGameAmount() {
+                return clients.length;
+            }
+        }, clients)).start();
     }
 
 
